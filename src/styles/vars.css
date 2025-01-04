@@ -3,7 +3,7 @@
   --color-foreground: hsl(0 0% 100%);
   --color-foreground-secondary: hsl(0 0% 100% / 0.6);
 
-  --color-orange-hsl: 7 100% 69%;
+  --color-orange-hsl: 329, 93.4%, 52.4%;
   --color-orange: hsl(var(--color-orange-hsl));
 
   --color-purple-hsl: 259 81% 28%;

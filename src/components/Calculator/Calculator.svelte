@@ -1,71 +1,83 @@
 <script>
-  import { fly } from "svelte/transition"
-  import { cubicInOut } from "svelte/easing"
-  import CheckIcon from "../Icons/Check.svelte"
-  import styles from "./Calculator.module.css"
+import { fly } from "svelte/transition"
+import { cubicInOut } from "svelte/easing"
+import CheckIcon from "../Icons/Check.svelte"
+import styles from "./Calculator.module.css"
 
-  let unit = "px" // or "rem"
-  $: isRem = unit === "rem"
-  const toRem = (value) => +(isRem ? value : value / 16)?.toFixed(3)
-  const toPx = (value) => +(isRem ? value * 16 : value)?.toFixed(3)
-  const switchToCurrentValue = (value) => (isRem ? toRem(value) : toPx(value))
+let unit = "px" // or "rem"
+$: isRem = unit === "rem"
+const toRem = (value) => +(isRem ? value : value / 16)?.toFixed(3)
+const toPx = (value) => +(isRem ? value * 16 : value)?.toFixed(3)
+const switchToCurrentValue = (value) => (isRem ? toRem(value) : toPx(value))
 
-  let minValue = 16
-  let maxValue = 24
-  let minViewportPx = 320
-  let maxViewportPx = 1200
-  $: minViewport = switchToCurrentValue(minViewportPx)
-  $: maxViewport = switchToCurrentValue(maxViewportPx)
+let minValue = 16
+let maxValue = 24
+let minViewportPx = 320
+let maxViewportPx = 1200
+$: minViewport = switchToCurrentValue(minViewportPx)
+$: maxViewport = switchToCurrentValue(maxViewportPx)
 
-  // Errors
-  let hasError = false
-  let hasNegative = false
-  let isMinValueGreaterThanMaxValue = false
-  let isMinViewPortGreaterThanMaxViewPort = false
+// Errors
+let hasError = false
+let hasNegative = false
+let isMinValueGreaterThanMaxValue = false
+let isMinViewPortGreaterThanMaxViewPort = false
 
-  let result
-  let isCopied = false
+let result
+let cssValue // New variable for the live preview
+let isCopied = false
 
-  // Functions
+// Functions
+const switchUnit = () => {
+  const switchValue = (value) => (isRem ? toPx(value) : toRem(value))
+  unit = unit === "px" ? "rem" : "px"
 
-  const switchUnit = () => {
-    const switchValue = (value) => (isRem ? toPx(value) : toRem(value))
-    unit = unit === "px" ? "rem" : "px"
+  minValue = switchValue(minValue)
+  maxValue = switchValue(maxValue)
+}
 
-    minValue = switchValue(minValue)
-    maxValue = switchValue(maxValue)
-  }
+const copyToClipboard = () => {
+  navigator.clipboard.writeText(result).then(() => {
+    isCopied = true
+    setTimeout(() => {
+      isCopied = false
+    }, 2000)
+  })
+}
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(result).then(() => {
-      isCopied = true
-      setTimeout(() => {
-        isCopied = false
-      }, 2000)
-    })
-  }
+const validate = () => {
+  hasNegative = minViewportPx < 0 || maxViewportPx < 1
+  isMinValueGreaterThanMaxValue = minValue >= maxValue
+  isMinViewPortGreaterThanMaxViewPort = minViewportPx >= maxViewportPx
+  hasError =
+    hasNegative ||
+    isMinValueGreaterThanMaxValue ||
+    isMinViewPortGreaterThanMaxViewPort
+}
 
-  const validate = () => {
-    hasNegative = minViewportPx < 0 || maxViewportPx < 1
-    isMinValueGreaterThanMaxValue = minValue >= maxValue
-    isMinViewPortGreaterThanMaxViewPort = minViewportPx >= maxViewportPx
-    hasError =
-      hasNegative ||
-      isMinValueGreaterThanMaxValue ||
-      isMinViewPortGreaterThanMaxViewPort
-  }
-
-  $: {
-    // Write Result
-    const minValuePx = isRem ? toPx(minValue) : minValue
-    const maxValuePx = isRem ? toPx(maxValue) : maxValue
-    const variablePart = (maxValuePx - minValuePx) / (maxViewport - minViewport)
-    const constant = parseFloat(
-      ((maxValuePx - maxViewport * variablePart) / 16).toFixed(3)
-    )
-    // prettier-ignore
-    result = `clamp(${toRem(minValue)}rem,${constant ? ` ${constant}rem +` : ""} ${parseFloat((100 * variablePart).toFixed(2))}vw, ${toRem(maxValue)}rem)`
-  }
+$: {
+  // Get base values in pixels
+  const minValuePx = isRem ? toPx(minValue) : minValue
+  const maxValuePx = isRem ? toPx(maxValue) : maxValue
+  
+  // Calculate the slope
+  const pixelRange = maxValuePx - minValuePx
+  const viewportRange = maxViewportPx - minViewportPx
+  const variablePart = pixelRange / viewportRange
+  
+  // Calculate the y-intercept in rem
+  const constant = parseFloat(
+    (minValuePx - (minViewportPx * variablePart)) / 16
+  ).toFixed(3)
+  
+  const vwCoefficient = parseFloat((100 * variablePart).toFixed(2))
+  
+  // For display/copy - using pxToRem function
+  result = `clamp(pxToRem(${minValuePx}), calc(${constant}rem + ${vwCoefficient}vw), pxToRem(${maxValuePx}))`
+  
+  // For CSS live preview - using direct rem values
+  cssValue = `clamp(${minValuePx/16}rem, calc(${constant}rem + ${vwCoefficient}vw), ${maxValuePx/16}rem)`
+}
 </script>
 
 <section class={styles.wrapper}>
@@ -275,7 +287,7 @@
 </section>
 
 <details-utils animate>
-  <details class={styles.liveExample} style="--variable-value: {result}">
+  <details class={styles.liveExample} style="--variable-value: {cssValue}">
     <summary>Live font-size example</summary>
     <div>
       <p style="font-size:var(--variable-value)" contenteditable="true">

@@ -21,8 +21,8 @@ html {
   background-blend-mode: multiply;
   background-image: radial-gradient(
       51.98% 51.98% at 75.49% 26.72%,
-      #330e82 0%,
-      #18004a 100%
+      #8438df 0%,
+      #330e82 100%
     ),
     url("../assets/img/grain.png");
   background-size:

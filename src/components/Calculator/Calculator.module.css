@@ -8,7 +8,7 @@
   background-color: rgb(255 255 255 / 0.05);
   background-image: radial-gradient(
     50% 50% at 50% 50%,
-    rgba(148, 88, 88, 0.48) 0%,
+    rgb(121, 8, 66) 0%,
     rgba(148, 88, 88, 0) 100%
   );
   gap: 2rem;
@@ -102,7 +102,9 @@
   inline-size: 50%;
   inset-block-end: 0;
   inset-inline-start: 0;
-  transition: transform 0.4s var(--ease-in-out-expo), background-color 0.2s ease;
+  transition:
+    transform 0.4s var(--ease-in-out-expo),
+    background-color 0.2s ease;
 
   &[data-unit="rem"] {
     transform: translateX(100%);
@@ -120,7 +122,9 @@
   font-weight: 600;
   grid-row: 1;
   inline-size: var(--height);
-  transition: color 0.5s var(--ease-in-out-quint), border-color 0.2s ease;
+  transition:
+    color 0.5s var(--ease-in-out-quint),
+    border-color 0.2s ease;
 
   &[data-active="true"] {
     color: var(--color-foreground);
@@ -193,7 +197,8 @@
   font-weight: 700;
   min-inline-size: 0;
   padding-inline: 1.25em 3em;
-  transition: box-shadow 0.3s ease-in-out,
+  transition:
+    box-shadow 0.3s ease-in-out,
     background-color 0.3s var(--ease-in-out-quad);
 
   &:is(:hover, :focus) {
@@ -276,14 +281,16 @@
   border-radius: calc(var(--min-height) / 2);
   background-color: var(--color-orange);
   block-size: 100%;
-  color: var(--color-purple);
+  color: white;
   font-size: var(--font-size-0);
   font-weight: 700;
   inline-size: 100%;
   line-height: 1;
   min-block-size: var(--input-height);
   padding-inline: 2rem;
-  transition: background-color 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    box-shadow 0.3s ease-in-out;
 
   & ::selection {
     background: hsl(var(--color-purple-hsl) / 0.4);
@@ -358,7 +365,7 @@
     align-items: center;
     border-radius: 999rem;
     background: var(--color-orange);
-    color: var(--color-purple);
+    color: white;
     cursor: pointer;
     font-size: var(--font-size--1);
     font-weight: 700;
@@ -379,8 +386,8 @@
       border-style: solid;
       border-color: transparent;
       block-size: 0;
-      border-block-end-color: var(--color-purple);
-      border-block-start-color: var(--color-purple);
+      border-block-end-color: white;
+      border-block-start-color: white;
       content: "";
       inline-size: 0;
       transition: transform 0.4s var(--ease-in-out-quad);
