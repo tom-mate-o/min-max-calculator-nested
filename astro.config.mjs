@@ -3,6 +3,7 @@ import svelte from "@astrojs/svelte"
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://min-max-calculator.9elements.com/",
+  site: "https://tom-mate-o.github.io",
+  base: "/min-max-calculator-nested/",
   integrations: [svelte()],
 })
