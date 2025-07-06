@@ -73,7 +73,7 @@ $: {
   const vwCoefficient = parseFloat((100 * variablePart).toFixed(2))
   
   // For display/copy - using pxToRem function
-  result = `clamp(pxToRem(${minValuePx}), calc(${constant}rem + ${vwCoefficient}vw), pxToRem(${maxValuePx}))`
+  result = `clamp(u.rem(${minValuePx}), calc(${constant}rem + ${vwCoefficient}vw), u.rem(${maxValuePx}))`
   
   // For CSS live preview - using direct rem values
   cssValue = `clamp(${minValuePx/16}rem, calc(${constant}rem + ${vwCoefficient}vw), ${maxValuePx/16}rem)`
