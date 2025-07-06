@@ -12,7 +12,7 @@ const switchToCurrentValue = (value) => (isRem ? toRem(value) : toPx(value))
 
 let minValue = 16
 let maxValue = 24
-let minViewportPx = 320
+let minViewportPx = 300
 let maxViewportPx = 1200
 $: minViewport = switchToCurrentValue(minViewportPx)
 $: maxViewport = switchToCurrentValue(maxViewportPx)
